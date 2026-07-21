@@ -6,7 +6,7 @@ st.set_page_config(
     page_title="ROHGUARD - Consequences Eradicator", page_icon="🛡️"
 )
 st.title("🛡️ ROHGUARD")
-st.caption("The Social Media Risk Analyzer — Think before you post!,And make sure you type the words properly.NO TPYOS!")
+st.caption("The Social Media Risk Analyzer — Think before you post!")
 
 post_draft = st.text_area(
     "Draft your post here:",
@@ -23,47 +23,144 @@ if st.button("Analyze Post Risk", type="primary"):
 
             text_lower = post_draft.lower()
 
-            # Expanded trigger list covering insults, shaming, rude critiques, and "honest" blunt phrases
-            danger_triggers = [
-                # "Honest" / Blunt Disclaimer Phrases
+            # =========================================================
+            # 1. COMPLIMENT DICTIONARY (Awards 0/100 Safe Score)
+            # =========================================================
+            compliments = [
+                # Character & Personality
+                "awesome",
+                "amazing",
+                "brilliant",
+                "brave",
+                "caring",
+                "creative",
+                "friendly",
+                "funny",
+                "generous",
+                "great",
+                "helpful",
                 "honest",
-                "truth",
-                "no offense",
-                "sorry not sorry",
-                "just saying",
-                "real talk",
-                "facts",
-                # Blunt / Rude Personality & Behavior Traits
-                "annoying",
+                "kind",
+                "legend",
+                "nice",
+                "polite",
+                "smart",
+                "sweet",
+                "talented",
+                "wonderful",
+                "thoughtful",
+                "supportive",
+                "inspiring",
+                "respectful",
+                "welcoming",
+                "clever",
+                "patient",
+                "humble",
+                "loyal",
+                "trustworthy",
+                "charming",
+                "energetic",
+                "hardworking",
+                # Physical & Appearance Compliments
+                "gorgeous",
+                "handsome",
+                "pretty",
+                "cute",
+                "stylish",
+                "neat",
+                # Positive Reinforcement
+                "best",
+                "goat",
+                "slay",
+                "hero",
+                "role model",
+                "star",
+                "genius",
+                "mastermind",
+                "champion",
+                "winner",
+            ]
+
+            # =========================================================
+            # 2. MASSIVE BAD DESCRIPTIONS & INSULTS DICTIONARY
+            # =========================================================
+            bad_descriptions = [
+                # Category A: Physical & Appearance Insults
+                "ugly",
+                "fat",
+                "gross",
+                "smelly",
+                "weird",
+                "skinny",
+                "hideous",
+                "nasty",
+                "unhygienic",
+                "crusty",
+                "musty",
+                "dusty",
+                "awkward",
+                # Category B: Behavioral & Personality Traits
+                "naughty",
+                "rude",
+                "mean",
                 "fake",
-                "boring",
-                "loud",
+                "annoying",
                 "obnoxious",
                 "lazy",
                 "clueless",
                 "cringe",
                 "lame",
-                "weird",
-                "gross",
-                "smelly",
-                "mean",
-                "bad",
+                "boring",
+                "loud",
+                "bossy",
+                "greedy",
+                "selfish",
+                "sneaky",
+                "dishonest",
                 "horrible",
                 "terrible",
                 "awful",
                 "useless",
-                # Performance & Intelligence Critiques
+                "dramatic",
+                "petty",
+                "jealous",
+                "stubborn",
+                "spoiled",
+                "childish",
+                "toxic",
+                "obnoxious",
+                # Category C: Intelligence & Capability Critiques
                 "dumb",
                 "stupid",
                 "idiot",
-                "fail",
                 "slow",
                 "worst",
-                "bad at",
                 "sucks",
-                # Physical & Shaming Triggers
-                "fat",
-                "ugly",
+                "fail",
+                "failure",
+                "clumsy",
+                "loser",
+                "fool",
+                "brainless",
+                "ignorant",
+                "incompetent",
+                # Category D: Slang, Shaming & Internet Terminology
+                "opp",
+                "snitch",
+                "clown",
+                "trash",
+                "garbage",
+                "cap",
+                "fraud",
+                "poser",
+                "freak",
+                "bozo",
+                "npc",
+                "mid",
+                "flop",
+                "canceled",
+                "ratio",
+                # Category E: Direct Actions & Harassment Triggers
                 "shame",
                 "shaming",
                 "bully",
@@ -73,50 +170,66 @@ if st.button("Analyze Post Risk", type="primary"):
                 "roast",
                 "hate",
                 "expose",
-                # Targets & Actions
-                "friend",
-                "classmate",
-                "student",
-                "kid",
-                "teacher",
-                "principal",
-                "skinner",
-                "boss",
-                "photo",
-                "pic",
-                "edit",
+                "prank",
                 "embarr",
                 "embar",
-                "prank",
+                "leak",
                 "secret",
-                "sick",
+                "rumor",
+                "gossip",
+                "photoshop",
+                # Category F: School Disruption & Authority Figures
+                "skinner",
+                "principal",
+                "teacher",
+                "boss",
+                "fight",
+                "steal",
+                "cheat",
+                "detention",
+                "suspended",
                 "fired",
             ]
 
-            matched_triggers = [
-                word for word in danger_triggers if word in text_lower
-            ]
+            # ---------------------------------------------------------
+            # EVALUATION LOGIC
+            # ---------------------------------------------------------
+            matched_compliments = [w for w in compliments if w in text_lower]
+            matched_bad = [w for w in bad_descriptions if w in text_lower]
 
-            if len(matched_triggers) >= 1:
-                score = random.randint(82, 98)
+            if matched_compliments and not matched_bad:
+                score = 0
                 verdict = (
-                    "Goodness gracious! Even if a post is intended as honest feedback,"
-                    " publishing blunt or rude criticisms publicly can cause severe offense."
-                    " ROHGUARD strongly advises keeping this private!"
+                    "Splendid! This is a lovely compliment! Positivity receives"
+                    " a 100% safety rating from ROHGUARD."
+                )
+                risks = [
+                    "Zero risk of negative fallout.",
+                    "High probability of making someone's day brighter!",
+                ]
+            elif matched_bad:
+                score = random.randint(85, 98)
+                verdict = (
+                    "Goodness gracious! Describing someone using negative terms,"
+                    " insults, or public critiques can cause severe conflict."
+                    " ROHGUARD strongly advises deleting this draft!"
                 )
                 risks = [
                     (
-                        "High potential for personal conflict, hurt feelings, or social backlash."
+                        "High potential for personal conflict, hurt feelings, or"
+                        " social backlash."
                     ),
                     (
-                        "Risk of being reported for cyberbullying or code of conduct violations."
+                        "Risk of being reported for cyberbullying or code of"
+                        " conduct violations."
                     ),
                     (
-                        "Permanent record of public hostility that could harm your reputation."
+                        "Permanent record of public hostility that could harm your"
+                        " reputation."
                     ),
                 ]
             else:
-                score = random.randint(5, 20)
+                score = random.randint(10, 25)
                 verdict = (
                     "Splendid! This post appears completely harmless and safe"
                     " to publish."
@@ -130,7 +243,7 @@ if st.button("Analyze Post Risk", type="primary"):
             st.subheader("ROHGUARD's Assessment")
 
             if score < 30:
-                st.success(f"🟢 **Risk Score: {score}/100 — Low Risk**")
+                st.success(f"🟢 **Risk Score: {score}/100 — Low Risk (Safe)**")
             elif score < 70:
                 st.warning(f"🟡 **Risk Score: {score}/100 — Moderate Risk**")
             else:
