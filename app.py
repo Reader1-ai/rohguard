@@ -23,16 +23,16 @@ if st.button("Analyze Post Risk", type="primary"):
 
             text_lower = post_draft.lower()
 
-            # Expanded word triggers + partial matching (catches typos like "emabrrising")
+            # Word triggers + partial matching for typos
             danger_triggers = [
                 "embarr",
-                "embar",  # Catches embarrass, emabrrising, etc.
+                "embar",
                 "photo",
                 "pic",
-                "edit",  # Catches photoshop, picture
+                "edit",
                 "kid",
                 "classmate",
-                "student",  # Targets
+                "student",
                 "principal",
                 "teacher",
                 "boss",
@@ -44,7 +44,6 @@ if st.button("Analyze Post Risk", type="primary"):
                 "fired",
             ]
 
-            # Check how many risk patterns are triggered
             matched_triggers = [
                 word for word in danger_triggers if word in text_lower
             ]
@@ -52,7 +51,7 @@ if st.button("Analyze Post Risk", type="primary"):
             if len(matched_triggers) >= 1:
                 score = random.randint(80, 98)
                 verdict = (
-                    "Bloody hell! Editing or sharing embarrassing photos of"
+                    "Goodness gracious! Editing or sharing embarrassing photos of"
                     " classmates or teachers is a massive safety violation."
                     " ROHGUARD strongly advises deleting this draft!"
                 )
@@ -100,4 +99,4 @@ if st.button("Analyze Post Risk", type="primary"):
             st.markdown("### ⚠️ Potential Consequences:")
             for r in risks:
                 st.write(f"- {r}")
-            
+                
