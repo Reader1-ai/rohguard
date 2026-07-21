@@ -2,7 +2,6 @@ import random
 import time
 import streamlit as st
 
-# Setup
 st.set_page_config(
     page_title="ROHGUARD - Consequences Eradicator", page_icon="🛡️"
 )
@@ -20,49 +19,62 @@ if st.button("Analyze Post Risk", type="primary"):
         st.warning("Please type a post draft first!")
     else:
         with st.spinner("ROHGUARD is analyzing potential consequences..."):
-            time.sleep(1.2)  # Simulate processing
+            time.sleep(1.0)
 
             text_lower = post_draft.lower()
 
-            # Smart demo keyword checking
-            risky_words = [
-                "embarrass",
+            # Expanded word triggers + partial matching (catches typos like "emabrrising")
+            danger_triggers = [
+                "embarr",
+                "embar",  # Catches embarrass, emabrrising, etc.
+                "photo",
+                "pic",
+                "edit",  # Catches photoshop, picture
+                "kid",
+                "classmate",
+                "student",  # Targets
                 "principal",
                 "teacher",
-                "prank",
-                "challenge",
-                "sick",
                 "boss",
                 "skinner",
+                "prank",
+                "challenge",
                 "secret",
+                "sick",
                 "fired",
             ]
-            if any(word in text_lower for word in risky_words):
-                score = random.randint(75, 95)
+
+            # Check how many risk patterns are triggered
+            matched_triggers = [
+                word for word in danger_triggers if word in text_lower
+            ]
+
+            if len(matched_triggers) >= 1:
+                score = random.randint(80, 98)
                 verdict = (
-                    "Right! Posting this is an absolute recipe for trouble."
-                    " Targeting authority figures or school leadership is"
-                    " virtually guaranteed to bring swift disciplinary action!"
+                    "Bloody hell! Editing or sharing embarrassing photos of"
+                    " classmates or teachers is a massive safety violation."
+                    " ROHGUARD strongly advises deleting this draft!"
                 )
                 risks = [
                     (
-                        "High probability of administrative disciplinary action"
-                        " or detention."
+                        "High risk of cyberbullying, harassment, or"
+                        " disciplinary action from school."
                     ),
                     (
-                        "Violation of student conduct policies regarding"
-                        " disrespect or harassment."
+                        "Violation of student privacy and digital conduct"
+                        " policies."
                     ),
                     (
-                        "Permanent digital footprint that could impact school"
-                        " standing."
+                        "Severe harm to personal relationships and digital"
+                        " reputation."
                     ),
                 ]
             else:
-                score = random.randint(10, 25)
+                score = random.randint(5, 20)
                 verdict = (
-                    "Splendid! This post appears completely harmless and"
-                    " safe to publish."
+                    "Splendid! This post appears completely harmless and safe"
+                    " to publish."
                 )
                 risks = [
                     "Minimal risk of negative feedback.",
@@ -88,3 +100,4 @@ if st.button("Analyze Post Risk", type="primary"):
             st.markdown("### ⚠️ Potential Consequences:")
             for r in risks:
                 st.write(f"- {r}")
+            
