@@ -6,7 +6,7 @@ st.set_page_config(
     page_title="ROHGUARD - Consequences Eradicator", page_icon="🛡️"
 )
 st.title("🛡️ ROHGUARD")
-st.caption("The Social Media Risk Analyzer — Think before you post!")
+st.caption("The Social Media Risk Analyzer — Think before you post!,And make sure you type the words properly.NO TPYOS!")
 
 post_draft = st.text_area(
     "Draft your post here:",
@@ -23,22 +23,71 @@ if st.button("Analyze Post Risk", type="primary"):
 
             text_lower = post_draft.lower()
 
-            # Word triggers + partial matching for typos
+            # Expanded trigger list covering insults, shaming, rude critiques, and "honest" blunt phrases
             danger_triggers = [
-                "embarr",
-                "embar",
+                # "Honest" / Blunt Disclaimer Phrases
+                "honest",
+                "truth",
+                "no offense",
+                "sorry not sorry",
+                "just saying",
+                "real talk",
+                "facts",
+                # Blunt / Rude Personality & Behavior Traits
+                "annoying",
+                "fake",
+                "boring",
+                "loud",
+                "obnoxious",
+                "lazy",
+                "clueless",
+                "cringe",
+                "lame",
+                "weird",
+                "gross",
+                "smelly",
+                "mean",
+                "bad",
+                "horrible",
+                "terrible",
+                "awful",
+                "useless",
+                # Performance & Intelligence Critiques
+                "dumb",
+                "stupid",
+                "idiot",
+                "fail",
+                "slow",
+                "worst",
+                "bad at",
+                "sucks",
+                # Physical & Shaming Triggers
+                "fat",
+                "ugly",
+                "shame",
+                "shaming",
+                "bully",
+                "insult",
+                "mock",
+                "tease",
+                "roast",
+                "hate",
+                "expose",
+                # Targets & Actions
+                "friend",
+                "classmate",
+                "student",
+                "kid",
+                "teacher",
+                "principal",
+                "skinner",
+                "boss",
                 "photo",
                 "pic",
                 "edit",
-                "kid",
-                "classmate",
-                "student",
-                "principal",
-                "teacher",
-                "boss",
-                "skinner",
+                "embarr",
+                "embar",
                 "prank",
-                "challenge",
                 "secret",
                 "sick",
                 "fired",
@@ -49,24 +98,21 @@ if st.button("Analyze Post Risk", type="primary"):
             ]
 
             if len(matched_triggers) >= 1:
-                score = random.randint(80, 98)
+                score = random.randint(82, 98)
                 verdict = (
-                    "Goodness gracious! Editing or sharing embarrassing photos of"
-                    " classmates or teachers is a massive safety violation."
-                    " ROHGUARD strongly advises deleting this draft!"
+                    "Goodness gracious! Even if a post is intended as honest feedback,"
+                    " publishing blunt or rude criticisms publicly can cause severe offense."
+                    " ROHGUARD strongly advises keeping this private!"
                 )
                 risks = [
                     (
-                        "High risk of cyberbullying, harassment, or"
-                        " disciplinary action from school."
+                        "High potential for personal conflict, hurt feelings, or social backlash."
                     ),
                     (
-                        "Violation of student privacy and digital conduct"
-                        " policies."
+                        "Risk of being reported for cyberbullying or code of conduct violations."
                     ),
                     (
-                        "Severe harm to personal relationships and digital"
-                        " reputation."
+                        "Permanent record of public hostility that could harm your reputation."
                     ),
                 ]
             else:
@@ -99,4 +145,3 @@ if st.button("Analyze Post Risk", type="primary"):
             st.markdown("### ⚠️ Potential Consequences:")
             for r in risks:
                 st.write(f"- {r}")
-                
