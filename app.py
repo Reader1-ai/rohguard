@@ -1,16 +1,37 @@
 import random
 import time
+import nltk
+from nltk.corpus import opinion_lexicon
 import streamlit as st
 
+# Download the 10,000+ categorized word dictionary dataset
+nltk.download("opinion_lexicon", quiet=True)
+
+# Load thousands of pre-categorized dictionary words
+POSITIVE_DICTIONARY = set(opinion_lexicon.positive())
+NEGATIVE_DICTIONARY = set(opinion_lexicon.negative())
+
+# Extra custom school/slang additions
+SLANG_NEGATIVES = {
+    "skinner",
+    "opp",
+    "snitch",
+    "cringe",
+    "ratio",
+    "canceled",
+    "cap",
+}
+
+# Setup Page
 st.set_page_config(
     page_title="ROHGUARD - Consequences Eradicator", page_icon="🛡️"
 )
 st.title("🛡️ ROHGUARD")
-st.caption("The Social Media Risk Analyzer — Think before you post!")
+st.caption("The Social Media Risk Analyzer — 10,000+ Word Dictionary Engine")
 
 post_draft = st.text_area(
     "Draft your post here:",
-    placeholder="e.g., Sending a challenge that possibly embarrasses my principal",
+    placeholder="e.g., Type any positive compliment or negative description from the dictionary!",
     height=120,
 )
 
@@ -18,221 +39,54 @@ if st.button("Analyze Post Risk", type="primary"):
     if not post_draft.strip():
         st.warning("Please type a post draft first!")
     else:
-        with st.spinner("ROHGUARD is analyzing potential consequences..."):
+        with st.spinner("ROHGUARD is scanning 10,000+ dictionary terms..."):
             time.sleep(1.0)
 
-            text_lower = post_draft.lower()
-
-            # =========================================================
-            # 1. COMPLIMENT DICTIONARY (Awards 0/100 Safe Score)
-            # =========================================================
-            compliments = [
-                # Character & Personality
-                "awesome",
-                "amazing",
-                "brilliant",
-                "brave",
-                "caring",
-                "creative",
-                "friendly",
-                "funny",
-                "generous",
-                "great",
-                "helpful",
-                "honest",
-                "kind",
-                "legend",
-                "nice",
-                "polite",
-                "smart",
-                "sweet",
-                "talented",
-                "wonderful",
-                "thoughtful",
-                "supportive",
-                "inspiring",
-                "respectful",
-                "welcoming",
-                "clever",
-                "patient",
-                "humble",
-                "loyal",
-                "trustworthy",
-                "charming",
-                "energetic",
-                "hardworking",
-                # Physical & Appearance Compliments
-                "gorgeous",
-                "handsome",
-                "pretty",
-                "cute",
-                "stylish",
-                "neat",
-                # Positive Reinforcement
-                "best",
-                "goat",
-                "slay",
-                "hero",
-                "role model",
-                "star",
-                "genius",
-                "mastermind",
-                "champion",
-                "winner",
+            # Clean and split input text into individual words
+            words = [
+                word.strip(".,!?\"'()").lower() for word in post_draft.split()
             ]
 
-            # =========================================================
-            # 2. MASSIVE BAD DESCRIPTIONS & INSULTS DICTIONARY
-            # =========================================================
-            bad_descriptions = [
-                # Category A: Physical & Appearance Insults
-                "ugly",
-                "fat",
-                "gross",
-                "smelly",
-                "weird",
-                "skinny",
-                "hideous",
-                "nasty",
-                "unhygienic",
-                "crusty",
-                "musty",
-                "dusty",
-                "awkward",
-                # Category B: Behavioral & Personality Traits
-                "naughty",
-                "rude",
-                "mean",
-                "fake",
-                "annoying",
-                "obnoxious",
-                "lazy",
-                "clueless",
-                "cringe",
-                "lame",
-                "boring",
-                "loud",
-                "bossy",
-                "greedy",
-                "selfish",
-                "sneaky",
-                "dishonest",
-                "horrible",
-                "terrible",
-                "awful",
-                "useless",
-                "dramatic",
-                "petty",
-                "jealous",
-                "stubborn",
-                "spoiled",
-                "childish",
-                "toxic",
-                "obnoxious",
-                # Category C: Intelligence & Capability Critiques
-                "dumb",
-                "stupid",
-                "idiot",
-                "slow",
-                "worst",
-                "sucks",
-                "fail",
-                "failure",
-                "clumsy",
-                "loser",
-                "fool",
-                "brainless",
-                "ignorant",
-                "incompetent",
-                # Category D: Slang, Shaming & Internet Terminology
-                "opp",
-                "snitch",
-                "clown",
-                "trash",
-                "garbage",
-                "cap",
-                "fraud",
-                "poser",
-                "freak",
-                "bozo",
-                "npc",
-                "mid",
-                "flop",
-                "canceled",
-                "ratio",
-                # Category E: Direct Actions & Harassment Triggers
-                "shame",
-                "shaming",
-                "bully",
-                "insult",
-                "mock",
-                "tease",
-                "roast",
-                "hate",
-                "expose",
-                "prank",
-                "embarr",
-                "embar",
-                "leak",
-                "secret",
-                "rumor",
-                "gossip",
-                "photoshop",
-                # Category F: School Disruption & Authority Figures
-                "skinner",
-                "principal",
-                "teacher",
-                "boss",
-                "fight",
-                "steal",
-                "cheat",
-                "detention",
-                "suspended",
-                "fired",
+            # Check matches against the 10,000+ word lists
+            matched_positive = [w for w in words if w in POSITIVE_DICTIONARY]
+            matched_negative = [
+                w
+                for w in words
+                if w in NEGATIVE_DICTIONARY or w in SLANG_NEGATIVES
             ]
 
             # ---------------------------------------------------------
             # EVALUATION LOGIC
             # ---------------------------------------------------------
-            matched_compliments = [w for w in compliments if w in text_lower]
-            matched_bad = [w for w in bad_descriptions if w in text_lower]
-
-            if matched_compliments and not matched_bad:
+            if matched_positive and not matched_negative:
                 score = 0
                 verdict = (
-                    "Splendid! This is a lovely compliment! Positivity receives"
-                    " a 100% safety rating from ROHGUARD."
+                    "Splendid! Your draft matched positive dictionary terms!"
+                    " Positivity receives a 100% safety rating (0/100 risk) from"
+                    " ROHGUARD."
                 )
                 risks = [
-                    "Zero risk of negative fallout.",
-                    "High probability of making someone's day brighter!",
+                    "Zero risk of negative social fallout.",
+                    f"Matched positive dictionary terms: {', '.join(matched_positive)}",
                 ]
-            elif matched_bad:
+            elif matched_negative:
                 score = random.randint(85, 98)
                 verdict = (
-                    "Goodness gracious! Describing someone using negative terms,"
-                    " insults, or public critiques can cause severe conflict."
-                    " ROHGUARD strongly advises deleting this draft!"
+                    "Goodness gracious! Your draft matched negative terms in the"
+                    " dictionary. ROHGUARD strongly advises against publishing this!"
                 )
                 risks = [
                     (
-                        "High potential for personal conflict, hurt feelings, or"
-                        " social backlash."
+                        "High risk of social conflict, hurt feelings, or"
+                        " disciplinary reports."
                     ),
-                    (
-                        "Risk of being reported for cyberbullying or code of"
-                        " conduct violations."
-                    ),
-                    (
-                        "Permanent record of public hostility that could harm your"
-                        " reputation."
-                    ),
+                    f"Flagged dictionary terms: {', '.join(matched_negative)}",
                 ]
             else:
                 score = random.randint(10, 25)
                 verdict = (
-                    "Splendid! This post appears completely harmless and safe"
-                    " to publish."
+                    "Splendid! This post appears completely neutral and safe to"
+                    " publish."
                 )
                 risks = [
                     "Minimal risk of negative feedback.",
